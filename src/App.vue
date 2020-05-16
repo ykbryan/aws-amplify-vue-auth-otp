@@ -4,38 +4,17 @@
       <img alt="Vue logo" src="./assets/logo.png" />
       <h1>Welcome to AWS Amplify Demo</h1>
       <h4 v-if="message !== ''">{{ message }}</h4>
-      <b-form
-        inline
-        v-if="user === null && session === null"
-        class="justify-content-md-center"
-      >
-        <b-form-input
-          class="mr-2"
-          v-model="number"
-          placeholder="Enter phone number"
-        ></b-form-input>
+      <b-form inline v-if="user === null && session === null" class="justify-content-md-center">
+        <b-form-input class="mr-2" v-model="number" placeholder="Enter phone number"></b-form-input>
         <b-button variant="outline-primary" @click="signIn">Login</b-button>
       </b-form>
-      <b-form
-        inline
-        v-if="user === null && session !== null"
-        class="justify-content-md-center"
-      >
-        <b-form-input
-          class="mr-2"
-          v-model="otp"
-          placeholder="Enter OTP "
-          @keypress="signOut"
-        ></b-form-input>
-        <b-button variant="outline-primary" @click="verifyOtp"
-          >Confirm</b-button
-        >
+      <b-form inline v-if="user === null && session !== null" class="justify-content-md-center">
+        <b-form-input class="mr-2" v-model="otp" placeholder="Enter OTP " @keypress="signOut"></b-form-input>
+        <b-button variant="outline-primary" @click="verifyOtp">Confirm</b-button>
       </b-form>
       <div class="mt-3">
         <b-button class="m-1" @click="verifyAuth">Verify</b-button>
-        <b-button class="m-1" variant="danger" @click="signOut"
-          >Sign Out</b-button
-        >
+        <b-button class="m-1" variant="danger" @click="signOut">Sign Out</b-button>
       </div>
     </b-container>
   </div>
@@ -43,42 +22,44 @@
 
 <script>
 // import { onMounted } from 'vue';
-import Auth from '@aws-amplify/auth';
+import Auth from "@aws-amplify/auth";
 
-const NOTSIGNIN = 'You are NOT logged in';
-const SIGNEDIN = 'You have logged in successfully';
-const SIGNEDOUT = 'You have logged out successfully';
-const WAITINGFOROTP = 'Enter OTP number';
-const VERIFYNUMBER = 'Verifying number (Country code +XX needed)';
+const NOTSIGNIN = "You are NOT logged in";
+const SIGNEDIN = "You have logged in successfully";
+const SIGNEDOUT = "You have logged out successfully";
+const WAITINGFOROTP = "Enter OTP number";
+const VERIFYNUMBER = "Verifying number (Country code +XX needed)";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-      message: '',
-      number: '',
-      otp: '',
+      message: "",
+      number: "",
+      otp: "",
       session: null,
       user: null,
-      password: Math.random().toString(10) + 'Abc#',
+      password: Math.random().toString(10) + "Abc#"
     };
   },
   created: function() {
-    this.verifyAuth();
+    let self = this;
+    setTimeout(function() {
+      self.verifyAuth();
+    }, 3000);
   },
   methods: {
     signIn() {
-      console.log('Sign In');
       this.message = VERIFYNUMBER;
       Auth.signIn(this.number)
-        .then((result) => {
+        .then(result => {
           this.session = result;
           this.message = WAITINGFOROTP;
         })
-        .catch((e) => {
-          if (e.code === 'UserNotFoundException') {
+        .catch(e => {
+          if (e.code === "UserNotFoundException") {
             this.signUp();
-          } else if (e.code === 'UsernameExistsException') {
+          } else if (e.code === "UsernameExistsException") {
             this.message = WAITINGFOROTP;
             this.signIn();
           } else {
@@ -88,56 +69,53 @@ export default {
         });
     },
     async signUp() {
-      console.log('Sign Up');
       const result = await Auth.signUp({
         username: this.number,
         password: this.password,
         attributes: {
-          phone_number: this.number,
-        },
+          phone_number: this.number
+        }
       }).then(() => this.signIn());
       return result;
     },
     signOut() {
-      console.log('Sign Out');
+      console.log("Sign Out");
       if (this.user) {
         Auth.signOut();
         this.user = null;
-        this.otp = '';
+        this.otp = "";
         this.message = SIGNEDOUT;
       } else {
         this.message = NOTSIGNIN;
       }
     },
     verifyAuth() {
-      console.log('verifyAuth');
       Auth.currentAuthenticatedUser()
-        .then((user) => {
+        .then(user => {
           this.user = user;
           this.message = SIGNEDIN;
           this.session = null;
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
           this.message = NOTSIGNIN;
         });
     },
     verifyOtp() {
-      console.log('verifyOtp');
       Auth.sendCustomChallengeAnswer(this.session, this.otp)
-        .then((user) => {
+        .then(user => {
           this.user = user;
           this.message = SIGNEDIN;
           this.session = null;
         })
-        .catch((err) => {
+        .catch(err => {
           this.signIn();
           this.message = err.message;
-          this.otp = '';
+          this.otp = "";
           console.log(err);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
