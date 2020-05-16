@@ -4,7 +4,11 @@
       <img alt="Vue logo" src="./assets/logo.png" />
       <h1>Welcome to AWS Amplify Demo</h1>
       <h4 v-if="message !== ''">{{ message }}</h4>
-      <b-form inline v-if="user === null" class="justify-content-md-center">
+      <b-form
+        inline
+        v-if="user === null && session === null"
+        class="justify-content-md-center"
+      >
         <b-form-input
           class="mr-2"
           v-model="number"
@@ -14,7 +18,7 @@
       </b-form>
       <b-form
         inline
-        v-if="user !== null && session !== null"
+        v-if="user === null && session !== null"
         class="justify-content-md-center"
       >
         <b-form-input
