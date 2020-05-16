@@ -1,29 +1,25 @@
 <template>
-  <div id="app">
-    <b-container>
-      <img alt="Vue logo" src="./assets/logo.png" />
-      <h1>Welcome to AWS Amplify Demo</h1>
-      <h4 v-if="message !== ''">{{ message }}</h4>
-      <b-form inline v-if="user === null && session === null" class="justify-content-md-center">
-        <b-form-input class="mr-2" v-model="number" placeholder="Enter phone number"></b-form-input>
-        <b-button variant="outline-primary" @click="signIn">Login</b-button>
-      </b-form>
-      <b-form inline v-if="user === null && session !== null" class="justify-content-md-center">
-        <b-form-input class="mr-2" v-model="otp" placeholder="Enter OTP " @keypress="signOut"></b-form-input>
-        <b-button variant="outline-primary" @click="verifyOtp">Confirm</b-button>
-      </b-form>
-      <div class="mt-3">
-        <b-button class="m-1" @click="verifyAuth">Verify</b-button>
-        <b-button class="m-1" variant="danger" @click="signOut">Sign Out</b-button>
-      </div>
-    </b-container>
-  </div>
+  <b-container class="text-center mt-5">
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <h1>Welcome to AWS Amplify Demo</h1>
+    <h4 v-if="message !== ''">{{ message }}</h4>
+    <b-form inline v-if="user === null && session === null" class="justify-content-md-center">
+      <b-form-input class="mr-2" v-model="number" placeholder="Enter phone number"></b-form-input>
+      <b-button variant="outline-primary" @click="signIn">Login</b-button>
+    </b-form>
+    <b-form inline v-if="user === null && session !== null" class="justify-content-md-center">
+      <b-form-input class="mr-2" v-model="otp" placeholder="Enter OTP " @keypress="signOut"></b-form-input>
+      <b-button variant="outline-primary" @click="verifyOtp">Confirm</b-button>
+    </b-form>
+    <div class="mt-3">
+      <b-button class="m-1" @click="verifyAuth">Verify</b-button>
+      <b-button class="m-1" variant="danger" @click="signOut">Sign Out</b-button>
+    </div>
+  </b-container>
 </template>
 
 <script>
-// import { onMounted } from 'vue';
 import Auth from "@aws-amplify/auth";
-
 const NOTSIGNIN = "You are NOT logged in";
 const SIGNEDIN = "You have logged in successfully";
 const SIGNEDOUT = "You have logged out successfully";
@@ -120,12 +116,11 @@ export default {
 </script>
 
 <style>
-#app {
+.container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
