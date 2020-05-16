@@ -2,6 +2,8 @@ import Vue from 'vue';
 import App from './App.vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import './assets/styles/custom.css';
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import Amplify from '@aws-amplify/core';
 import awsconfig from './aws-exports';
